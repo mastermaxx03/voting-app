@@ -19,6 +19,8 @@ const pollRoutes = require("./routes/polls");
 app.use("/api/polls", pollRoutes);
 const voterRoutes = require("./routes/voters");
 app.use("/api/polls/:pollId/voters", voterRoutes);
+const authRoutes = require("./routes/auth");
+app.use("/api/auth", authRoutes);
 
 // Define the port
 const PORT = process.env.PORT || 5001;
