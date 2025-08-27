@@ -13,6 +13,11 @@ app.get("/", (req, res) => {
   res.send("Welcome to the In-House Voting App Backend!");
 });
 
+// --- ROUTES ---
+// Add these two lines to connect your poll routes
+const pollRoutes = require("./routes/polls");
+app.use("/api/polls", pollRoutes);
+
 // Define the port
 const PORT = process.env.PORT || 5001;
 
