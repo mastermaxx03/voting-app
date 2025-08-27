@@ -17,6 +17,8 @@ app.get("/", (req, res) => {
 // Add these two lines to connect your poll routes
 const pollRoutes = require("./routes/polls");
 app.use("/api/polls", pollRoutes);
+const voterRoutes = require("./routes/voters");
+app.use("/api/polls/:pollId/voters", voterRoutes);
 
 // Define the port
 const PORT = process.env.PORT || 5001;
