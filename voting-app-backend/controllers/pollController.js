@@ -45,3 +45,58 @@ exports.getAllPolls = async (req, res) => {
     });
   }
 };
+//get poll by id to view details about a particular poll
+exports.getPollById = async (req, res) => {
+  try {
+    const poll = await Poll.findById(req.params.id);
+
+    if (!poll) {
+      return res.status(404).json({ success: false, error: "Poll not found" });
+    }
+
+    res.status(200).json({ success: true, data: poll });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
+//update a poll
+exports.updatePoll = async (req, res) => {
+  try {
+    let poll = await Poll.findById(req.params.id);
+
+    if (!poll) {
+      return res.status(404).json({ success: false, error: "Poll not found" });
+    }
+
+    // We will add security here later to ensure only the creator can update it.
+
+    poll = await Poll.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // Return the modified document
+      runValidators: true, // Run schema validators on update
+    });
+
+    res.status(200).json({ success: true, data: poll });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+};
+// @desc    Delete a poll
+// @route   DELETE /api/polls/:id
+// @access  Private (will be protected later)
+exports.deletePoll = async (req, res) => {
+  try {
+    const poll = await Poll.findById(req.params.id);
+
+    if (!poll) {
+      return res.status(404).json({ success: false, error: "Poll not found" });
+    }
+
+    // We will add security here later.
+
+    await poll.deleteOne(); // Use deleteOne() method on the document
+
+    res.status(200).json({ success: true, data: {} });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Server Error" });
+  }
+};
