@@ -8,19 +8,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// --- ROUTES ---
+const pollRoutes = require("./routes/polls");
+const voterRoutes = require("./routes/voters");
+const authRoutes = require("./routes/auth");
+
+app.use("/api/polls", pollRoutes);
+app.use("/api/polls/:pollId/voters", voterRoutes);
+app.use("/api/auth", authRoutes);
+
 // A simple test route
 app.get("/", (req, res) => {
   res.send("Welcome to the In-House Voting App Backend!");
 });
-
-// --- ROUTES ---
-// Add these two lines to connect your poll routes
-const pollRoutes = require("./routes/polls");
-app.use("/api/polls", pollRoutes);
-const voterRoutes = require("./routes/voters");
-app.use("/api/polls/:pollId/voters", voterRoutes);
-const authRoutes = require("./routes/auth");
-app.use("/api/auth", authRoutes);
 
 // Define the port
 const PORT = process.env.PORT || 5001;
@@ -36,5 +36,5 @@ mongoose
   })
   .catch((err) => {
     console.error("Database connection error:", err);
-    process.exit(1); // Exit the process if DB connection fails
+    process.exit(1);
   });

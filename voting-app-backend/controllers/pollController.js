@@ -9,7 +9,7 @@ exports.createPoll = async (req, res) => {
     // Later, this will come from the logged-in admin user's ID.
     const newPollData = {
       ...req.body,
-      createdBy: "60d5ec49a3e5a3e5d8a3e5a3", // Placeholder Admin ID
+      createdBy: req.user.id, // Placeholder Admin ID
     };
 
     const poll = new Poll(newPollData);
