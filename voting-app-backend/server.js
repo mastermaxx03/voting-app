@@ -12,10 +12,12 @@ app.use(express.json());
 const pollRoutes = require("./routes/polls");
 const voterRoutes = require("./routes/voters");
 const authRoutes = require("./routes/auth");
+const voteRoutes = require("./routes/votes");
 
 app.use("/api/polls", pollRoutes);
 app.use("/api/polls/:pollId/voters", voterRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/polls/:pollId", voteRoutes);
 
 // A simple test route
 app.get("/", (req, res) => {
