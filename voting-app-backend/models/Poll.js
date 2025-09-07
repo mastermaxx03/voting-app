@@ -67,7 +67,7 @@ const PollSchema = new Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "User", //only accessible by the admin who created the poll
       required: true,
     },
   },
