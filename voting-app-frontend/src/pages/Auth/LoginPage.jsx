@@ -1,29 +1,25 @@
 import React, { useState } from "react";
-import { API_URL } from "../../constants/config";
 import { initialPolls } from "../../constants/mockData";
 
-// WF-01 & WF-02: Homepage & Login
 const LoginPage = ({ setRoute, setAuth }) => {
   const [page, setPage] = useState("home"); // 'home', 'adminLogin', 'voterLogin'
-  const [adminOtpSent, setAdminOtpSent] = useState(false);
-  const [adminOtp, setAdminOtp] = useState("");
   const [voterEmail, setVoterEmail] = useState("");
   const [voterOtpSent, setVoterOtpSent] = useState(false);
   const [voterOtp, setVoterOtp] = useState("");
   const [error, setError] = useState("");
 
+  // Mock admin login: no backend call yet
   const handleAdminLogin = () => {
-    // This is a mock login. In a real app, you would make an API call.
-    // For this demo, we'll just simulate a successful login.
     setAuth({ type: "admin", name: "Admin User" });
     setRoute({ page: "adminDashboard" });
   };
 
+  // Mock voter OTP request using mock data
   const handleVoterOtpRequest = () => {
-    // In a real app, this would call the backend to send an OTP
     const voter = initialPolls
       .flatMap((p) => p.voters)
-      .find((v) => v.email === voterEmail);
+      .find((v) => v.email === voterEmail.toLowerCase());
+
     if (voter) {
       const poll = initialPolls.find((p) =>
         p.voters.some((v) => v.id === voter.id)
@@ -43,17 +39,20 @@ const LoginPage = ({ setRoute, setAuth }) => {
     }
   };
 
+  // Mock OTP verification: accepts OTP '654321' for demo
   const handleVoterOtpVerify = () => {
-    // In a real app, this would verify the OTP with the backend
     if (voterOtp === "654321") {
       const voter = initialPolls
         .flatMap((p) => p.voters)
-        .find((v) => v.email === voterEmail);
+        .find((v) => v.email === voterEmail.toLowerCase());
+
       const poll = initialPolls.find((p) =>
         p.voters.some((v) => v.id === voter.id)
       );
+
       setAuth({ type: "voter", ...voter });
       setRoute({ page: "voterBallot", pollId: poll.id, voterId: voter.id });
+      setError("");
     } else {
       setError("Invalid OTP. Please try again.");
     }
@@ -197,6 +196,8 @@ const LoginPage = ({ setRoute, setAuth }) => {
       </div>
     );
   }
+
+  return null;
 };
 
 export default LoginPage;

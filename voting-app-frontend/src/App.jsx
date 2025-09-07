@@ -1,8 +1,6 @@
-// src/App.jsx
-
 import React, { useState } from "react";
 import { initialPolls } from "./constants/mockData";
-import "./App.css"; // Keep your existing App styles
+import "./App.css";
 
 // Page Imports
 import LoginPage from "./pages/Auth/LoginPage";
@@ -20,15 +18,15 @@ export default function App() {
   const [polls, setPolls] = useState(initialPolls);
 
   const renderPage = () => {
-    // For easier development, you can uncomment the line below to bypass login
-    // if (!auth) { setAuth({ type: 'admin', name: 'Admin User' }); }
-
+    // If user not authenticated, show login page
     if (!auth) {
       return <LoginPage setRoute={setRoute} setAuth={setAuth} />;
     }
 
+    // Admin routes
     if (auth.type === "admin") {
       let content;
+
       switch (route.page) {
         case "adminDashboard":
           content = (
@@ -39,6 +37,7 @@ export default function App() {
             />
           );
           break;
+
         case "createPoll":
           content = (
             <CreatePoll
@@ -46,9 +45,11 @@ export default function App() {
               route={route}
               polls={polls}
               setPolls={setPolls}
+              auth={auth}
             />
           );
           break;
+
         case "livePollDashboard":
           content = (
             <LivePollDashboard
@@ -59,11 +60,13 @@ export default function App() {
             />
           );
           break;
+
         case "pollResults":
           content = (
             <PollResults setRoute={setRoute} route={route} polls={polls} />
           );
           break;
+
         default:
           content = (
             <AdminDashboard
@@ -73,6 +76,7 @@ export default function App() {
             />
           );
       }
+
       return (
         <AdminLayout auth={auth} setRoute={setRoute} setAuth={setAuth}>
           {content}
@@ -80,6 +84,7 @@ export default function App() {
       );
     }
 
+    // Voter routes
     if (auth.type === "voter") {
       switch (route.page) {
         case "voterBallot":
@@ -92,17 +97,21 @@ export default function App() {
               auth={auth}
             />
           );
+
         case "voterConfirmation":
           return <VoterConfirmation setRoute={setRoute} setAuth={setAuth} />;
+
         default:
+          // On unknown voter route, fallback to login and clear auth
           setAuth(null);
           setRoute({ page: "home" });
           return <LoginPage setRoute={setRoute} setAuth={setAuth} />;
       }
     }
+
+    // Fallback to login for any unknown auth type or error
+    return <LoginPage setRoute={setRoute} setAuth={setAuth} />;
   };
 
-  // The className here matches the default from Vite's template.
-  // The content is now managed by our renderPage function.
   return <div className="App">{renderPage()}</div>;
 }

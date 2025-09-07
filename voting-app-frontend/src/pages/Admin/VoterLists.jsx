@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Modal } from "../../components/common/Modal";
-import { Alert } from "../../components/common/Alert";
-import { TrashIcon, PlusIcon } from "../../components/common/icons";
+import React, { useState } from "react";
+import Alert from "../../components/common/Alert";
+import { TrashIcon, PlusIcon } from "../../components/icons";
 
 export const VoterLists = ({ poll, setPoll }) => {
   const [newVoter, setNewVoter] = useState({
@@ -9,13 +8,7 @@ export const VoterLists = ({ poll, setPoll }) => {
     name: "",
     weight: "1.00",
   });
-  const [editingId, setEditingId] = useState(null);
-  const [editingValue, setEditingValue] = useState("");
-  const [showInviteModal, setShowInviteModal] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "" });
-  const editInputRef = useRef(null);
-
-  // TODO: Add API calls to add/remove/update voters for this poll
 
   const handleAddVoter = () => {
     // Basic validation
@@ -30,7 +23,11 @@ export const VoterLists = ({ poll, setPoll }) => {
       });
       return;
     }
-    if (poll.voters.some((v) => v.email === newVoter.email)) {
+    if (
+      poll.voters.some(
+        (v) => v.email.toLowerCase() === newVoter.email.toLowerCase()
+      )
+    ) {
       setAlert({
         message: "This email address is already in the list.",
         type: "error",
@@ -62,17 +59,19 @@ export const VoterLists = ({ poll, setPoll }) => {
         onDismiss={() => setAlert({ message: "", type: "" })}
       />
 
-      <div className="mb-4 flex flex-wrap gap-2 items-center">
+      <div className="mb-4 flex gap-2 items-center">
+        {/* Placeholder: Enable sending invites logic later */}
         <button
-          onClick={() => setShowInviteModal(true)}
           disabled={poll.voters.length === 0}
-          className="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-300"
+          className={`bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 ${
+            poll.voters.length === 0 ? "cursor-not-allowed" : ""
+          }`}
         >
           Send Invites
         </button>
         <button
-          className="bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300"
           disabled
+          className="bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg cursor-not-allowed"
         >
           Import CSV
         </button>
@@ -98,13 +97,13 @@ export const VoterLists = ({ poll, setPoll }) => {
                   <button
                     onClick={() => handleDeleteVoter(voter.id)}
                     className="text-red-500 hover:text-red-700"
+                    aria-label={`Delete voter ${voter.email}`}
                   >
                     <TrashIcon />
                   </button>
                 </td>
               </tr>
             ))}
-            {/* Add new voter row */}
             <tr className="bg-gray-50">
               <td className="p-2">
                 <input
@@ -132,6 +131,7 @@ export const VoterLists = ({ poll, setPoll }) => {
                 <input
                   type="number"
                   step="0.01"
+                  min="0"
                   value={newVoter.weight}
                   onChange={(e) =>
                     setNewVoter({ ...newVoter, weight: e.target.value })
@@ -143,6 +143,7 @@ export const VoterLists = ({ poll, setPoll }) => {
                 <button
                   onClick={handleAddVoter}
                   className="text-green-600 hover:text-green-800"
+                  aria-label="Add new voter"
                 >
                   <PlusIcon />
                 </button>
@@ -151,14 +152,6 @@ export const VoterLists = ({ poll, setPoll }) => {
           </tbody>
         </table>
       </div>
-
-      {showInviteModal && (
-        <Modal title="Send Invites" onClose={() => setShowInviteModal(false)}>
-          <p>
-            This will send email invitations to {poll.voters.length} voters.
-          </p>
-        </Modal>
-      )}
     </div>
   );
 };

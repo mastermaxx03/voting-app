@@ -10,7 +10,7 @@ const AdminLayout = ({ children, auth, setRoute, setAuth }) => (
           <div className="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-full">
             <UserCircleIcon />
             <span className="text-sm font-medium text-gray-700">
-              {auth.name}
+              {auth?.name || "Admin"}
             </span>
           </div>
           <button
@@ -38,8 +38,10 @@ const AdminLayout = ({ children, auth, setRoute, setAuth }) => (
           >
             Create Poll
           </button>
-          {/* These would be implemented fully in a larger app */}
-          <button className="text-gray-400 cursor-not-allowed font-medium">
+          <button
+            className="text-gray-400 cursor-not-allowed font-medium"
+            disabled
+          >
             My Profile
           </button>
         </div>

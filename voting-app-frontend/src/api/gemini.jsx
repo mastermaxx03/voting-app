@@ -1,5 +1,4 @@
-// A real API key would be stored in environment variables, not here.
-const apiKey = "";
+const apiKey = ""; // Place your real API key here or load from environment variables
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
 export const callGeminiAPI = async (

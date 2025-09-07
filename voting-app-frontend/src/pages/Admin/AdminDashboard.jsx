@@ -2,7 +2,7 @@ import React from "react";
 import { formatDateTimeIST } from "../../utils/dateUtils";
 import { EditIcon, ViewIcon } from "../../components/icons";
 
-// WF-03: Admin Dashboard Home
+// Admin Dashboard Home
 const AdminDashboard = ({ setRoute, polls, setPolls }) => {
   const handleAction = (poll) => {
     if (poll.status === "DRAFT") {
@@ -86,6 +86,16 @@ const AdminDashboard = ({ setRoute, polls, setPolls }) => {
                   </td>
                 </tr>
               ))}
+              {polls.length === 0 && (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="px-6 py-4 text-center text-gray-500"
+                  >
+                    No polls available.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
